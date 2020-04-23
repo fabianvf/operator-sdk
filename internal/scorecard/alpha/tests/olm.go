@@ -15,6 +15,12 @@
 package tests
 
 import (
+	"bytes"
+	"path/filepath"
+
+	"github.com/sirupsen/logrus"
+
+	"github.com/operator-framework/operator-registry/pkg/lib/bundle"
 	"github.com/operator-framework/operator-registry/pkg/registry"
 	scapiv1alpha2 "github.com/operator-framework/operator-sdk/pkg/apis/scorecard/v1alpha2"
 )
@@ -28,14 +34,39 @@ const (
 )
 
 // BundleValidationTest validates an on-disk bundle
-func BundleValidationTest(bundle registry.Bundle) scapiv1alpha2.ScorecardTestResult {
+func BundleValidationTest(dir string) scapiv1alpha2.ScorecardTestResult {
 	r := scapiv1alpha2.ScorecardTestResult{}
 	r.Name = OLMBundleValidationTest
 	r.Description = "Validates bundle contents"
+
+	// Log output from the test will be captured in this buffer
+	buf := &bytes.Buffer{}
+	logger := logrus.WithField("name", "bundle-test")
+	logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetOutput(buf)
+
+	val := bundle.NewImageValidator("", logger)
+
+	// Validate bundle format.
+	if err := val.ValidateBundleFormat(dir); err != nil {
+		r.State = scapiv1alpha2.FailState
+		r.Errors = []string{err.Error()}
+		r.Log = buf.String()
+		return r
+	}
+
+	// Validate bundle content.
+	manifestsDir := filepath.Join(dir, bundle.ManifestsDir)
+	if err := val.ValidateBundleContent(manifestsDir); err != nil {
+		r.State = scapiv1alpha2.FailState
+		r.Errors = []string{err.Error()}
+		r.Log = buf.String()
+		return r
+	}
+
+	// Succeess
 	r.State = scapiv1alpha2.PassState
-	r.Log = "validation output goes here"
-	r.Errors = make([]string, 0)
-	r.Suggestions = make([]string, 0)
+	r.Log = buf.String()
 	return r
 }
 
