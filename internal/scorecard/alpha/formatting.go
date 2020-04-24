@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/operator-framework/operator-sdk/pkg/apis/scorecard/v1alpha2"
+	"gopkg.in/yaml.v2"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -86,9 +87,16 @@ func printOutput(outputFormat string, output v1alpha2.ScorecardOutput) error {
 			return err
 		}
 		fmt.Printf("%s\n", string(bytes))
+	case "yaml":
+		bytes, err := yaml.Marshal(output)
+		if err != nil {
+			fmt.Println(err.Error())
+			return err
+		}
+		fmt.Printf("%s\n", string(bytes))
+		return
 	default:
 		return fmt.Errorf("invalid output format selected")
 	}
 	return nil
-
 }

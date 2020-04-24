@@ -35,35 +35,35 @@ const (
 // ScorecardTestResult contains the results of an individual scorecard test.
 type ScorecardTestResult struct {
 	// Name is the name of the test
-	Name string `json:"name"`
+	Name string `json:"name" yaml:"name"`
 	// Description describes what the test does
-	Description string `json:"description"`
+	Description string `json:"description" yaml:"description"`
 	// Labels that further describe the test and enable selection
-	Labels map[string]string `json:"labels,omitempty"`
+	Labels map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	// State is the final state of the test
-	State State `json:"state,omitempty"`
+	State State `json:"state,omitempty" yaml:"state,omitempty"`
 	// Errors is a list of the errors that occurred during the test (this can include both fatal and non-fatal errors)
-	Errors []string `json:"errors,omitempty"`
+	Errors []string `json:"errors,omitempty" yaml:"errors,omitempty"`
 	// Suggestions is a list of suggestions for the user to improve their score (if applicable)
-	Suggestions []string `json:"suggestions,omitempty"`
+	Suggestions []string `json:"suggestions,omitempty" yaml:"suggestions,omitempty"`
 	// Log holds a log produced from the test (if applicable)
-	Log string `json:"log,omitempty"`
+	Log string `json:"log,omitempty" yaml:"log,omitempty"`
 	// CRName holds the CR name this test was run with (if applicable)
-	CRName string `json:"crname,omitempty"`
+	CRName string `json:"crname,omitempty" yaml:"crname,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ScorecardOutput is the schema for the scorecard API
 type ScorecardOutput struct {
-	metav1.TypeMeta `json:",inline"`
+	metav1.TypeMeta `json:",inline" yaml:",inline"`
 	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty" yaml:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// Log contains the scorecard's log.
-	Log string `json:"log"`
+	Log string `json:"log" yaml:"log"`
 	// Results is an array of ScorecardTestResult for the current scorecard run.
-	Results []ScorecardTestResult `json:"results"`
+	Results []ScorecardTestResult `json:"results" yaml:"results"`
 }
 
 func NewScorecardOutput() *ScorecardOutput {
