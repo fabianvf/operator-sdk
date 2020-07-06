@@ -59,6 +59,7 @@ type initScaffolder struct {
 
 // NewInitScaffolder returns a new Scaffolder for project initialization operations
 func NewInitScaffolder(config *config.Config, apiScaffolder scaffold.Scaffolder, generatePlaybook bool) scaffold.Scaffolder {
+	// TODO(asmacdo) not pleased that generatePlaybook ended up in here.
 	return &initScaffolder{
 		config:           config,
 		apiScaffolder:    apiScaffolder,
@@ -99,8 +100,6 @@ func (s *initScaffolder) scaffold() error {
 
 		&templates.Dockerfile{GeneratePlaybook: s.generatePlaybook},
 
-		// ansible.BuildDockerfile{},
-		// &ansible.BuildDockerfile{GeneratePlaybook: generatePlaybook},
 		// &ansible.RolesReadme{Resource: *resource},
 		// &ansible.RolesMetaMain{Resource: *resource},
 		// &roleFiles,
@@ -123,7 +122,7 @@ func (s *initScaffolder) scaffold() error {
 		// },
 		// &ansible.DeployOperator{},
 		// &ansible.Travis{},
-		// &ansible.RequirementsYml{},
+		&templates.RequirementsYml{},
 		// &ansible.MoleculeTestLocalMolecule{},
 		// &ansible.MoleculeTestLocalPrepare{},
 		// &ansible.MoleculeTestLocalVerify{},
@@ -135,27 +134,27 @@ func (s *initScaffolder) scaffold() error {
 		// &ansible.MoleculeClusterDestroy{Resource: *resource},
 		// &ansible.MoleculeTemplatesOperator{},
 
-	// 	&templates.GitIgnore{},
-	// 	&templates.AuthProxyRole{},
-	// 	&templates.AuthProxyRoleBinding{},
-	// 	&metricsauth.AuthProxyPatch{},
-	// 	&metricsauth.AuthProxyService{},
-	// 	&metricsauth.ClientClusterRole{},
-	// 	&manager.Config{Image: imageName},
-	// 	&templates.Makefile{
-	// 		Image:            imageName,
-	// 		KustomizeVersion: KustomizeVersion,
-	// 	},
-	// 	&templates.Dockerfile{},
-	// 	&templates.Kustomize{},
-	// 	&templates.ManagerRoleBinding{},
-	// 	&templates.LeaderElectionRole{},
-	// 	&templates.LeaderElectionRoleBinding{},
-	// 	&templates.KustomizeRBAC{},
-	// 	&templates.Watches{},
-	// 	&manager.Kustomization{},
-	// 	&prometheus.Kustomization{},
-	// 	&prometheus.ServiceMonitor{},
+		// &templates.GitIgnore{},
+		// &templates.AuthProxyRole{},
+		// &templates.AuthProxyRoleBinding{},
+		// &metricsauth.AuthProxyPatch{},
+		// &metricsauth.AuthProxyService{},
+		// &metricsauth.ClientClusterRole{},
+		// &manager.Config{Image: imageName},
+		// &templates.Makefile{
+		// 	Image:            imageName,
+		// 	KustomizeVersion: KustomizeVersion,
+		// },
+		// &templates.Dockerfile{},
+		// &templates.Kustomize{},
+		// &templates.ManagerRoleBinding{},
+		// &templates.LeaderElectionRole{},
+		// &templates.LeaderElectionRoleBinding{},
+		// &templates.KustomizeRBAC{},
+		// &templates.Watches{},
+		// &manager.Kustomization{},
+		// &prometheus.Kustomization{},
+		// &prometheus.ServiceMonitor{},
 	)
 }
 

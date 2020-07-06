@@ -1,4 +1,5 @@
 /*
+TODO(asmacdo) sdk licence header
 Copyright 2020 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -119,10 +120,10 @@ Writes the following files:
 func (p *initPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.SortFlags = false
 	fs.StringVar(&p.config.Domain, "domain", "my.domain", "domain for groups")
-	fs.BoolVarP(&p.generatePlaybook, "generate-playbook", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
 
-	// TODO(asmacdo)GENERATE PLAYBOOK FLAG HERE?
 	// p.apiPlugin.BindFlags(fs)
+	// TODO(asmacdo) move this into api plugin?
+	fs.BoolVarP(&p.generatePlaybook, "generate-playbook", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
 }
 
 func (p *initPlugin) InjectConfig(c *config.Config) {
