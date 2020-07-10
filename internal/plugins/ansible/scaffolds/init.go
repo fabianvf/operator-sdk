@@ -55,15 +55,21 @@ type initScaffolder struct {
 	config           *config.Config
 	apiScaffolder    scaffold.Scaffolder
 	generatePlaybook bool
+	group            string
+	version          string
+	kind             string
 }
 
 // NewInitScaffolder returns a new Scaffolder for project initialization operations
-func NewInitScaffolder(config *config.Config, apiScaffolder scaffold.Scaffolder, generatePlaybook bool) scaffold.Scaffolder {
+func NewInitScaffolder(config *config.Config, apiScaffolder scaffold.Scaffolder, generatePlaybook bool, group string, version string, kind string) scaffold.Scaffolder {
 	// TODO(asmacdo) not pleased that generatePlaybook ended up in here.
 	return &initScaffolder{
 		config:           config,
 		apiScaffolder:    apiScaffolder,
 		generatePlaybook: generatePlaybook,
+		group:            group,
+		version:          version,
+		kind:             kind,
 	}
 }
 

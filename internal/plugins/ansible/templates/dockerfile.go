@@ -19,7 +19,6 @@ import (
 
 	"sigs.k8s.io/kubebuilder/pkg/model/file"
 
-	"github.com/operator-framework/operator-sdk/internal/scaffold/ansible"
 	"github.com/operator-framework/operator-sdk/version"
 )
 
@@ -40,7 +39,7 @@ func (f *Dockerfile) SetTemplateDefaults() error {
 	}
 
 	f.TemplateBody = dockerfileTemplate
-	f.RolesDir = ansible.RolesDir
+	f.RolesDir = RolesDir
 	f.ImageTag = strings.TrimSuffix(version.Version, "+git")
 	return nil
 }

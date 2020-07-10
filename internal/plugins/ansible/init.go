@@ -40,6 +40,9 @@ type initPlugin struct {
 
 	// TODO(asmacdo) should be in CreateAPI plugin
 	generatePlaybook bool
+	group            string
+	version          string
+	kind             string
 
 	doAPIScaffold bool
 
@@ -123,7 +126,11 @@ func (p *initPlugin) BindFlags(fs *pflag.FlagSet) {
 
 	// p.apiPlugin.BindFlags(fs)
 	// TODO(asmacdo) move this into api plugin?
+	// TODO(asmacdo) short flags?
 	fs.BoolVarP(&p.generatePlaybook, "generate-playbook", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
+	fs.StringVar(&p.group, "group", "", "TODO(asmacdo) help text")
+	fs.StringVar(&p.version, "version", "", "TODO(asmacdo) help text")
+	fs.StringVar(&p.kind, "kind", "", "TODO(asmacdo) help text")
 }
 
 func (p *initPlugin) InjectConfig(c *config.Config) {
@@ -169,7 +176,7 @@ func (p *initPlugin) GetScaffolder() (scaffold.Scaffolder, error) {
 	// 		return nil, err
 	// 	}
 	// }
-	return scaffolds.NewInitScaffolder(p.config, apiScaffolder, p.generatePlaybook), nil
+	return scaffolds.NewInitScaffolder(p.config, apiScaffolder, p.generatePlaybook, p.group, p.version, p.kind), nil
 }
 
 func (p *initPlugin) PostScaffold() error {
