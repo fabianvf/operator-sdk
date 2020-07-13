@@ -44,8 +44,7 @@ func (f *Dockerfile) SetTemplateDefaults() error {
 	return nil
 }
 
-const dockerfileTemplate = `# Build the manager binary
-FROM quay.io/operator-framework/ansible-operator:{{.ImageTag}}
+const dockerfileTemplate = `# FROM quay.io/operator-framework/ansible-operator:{{.ImageTag}}
 
 COPY requirements.yml ${HOME}/requirements.yml
 RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
