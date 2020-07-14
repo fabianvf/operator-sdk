@@ -5,6 +5,7 @@
   gather_facts: no
   collections:
     - community.kubernetes
+
   tasks:
     - block:
       - name: Import all test files from tasks/
@@ -47,7 +48,6 @@
         - name: Re-emit failure
           vars:
             failed_task:
-              name: '{{ ansible_failed_task.name }}'
               result: '{{ ansible_failed_result }}'
           fail:
             msg: '{{ failed_task }}'
