@@ -30,7 +30,7 @@ import (
 	// "github.com/operator-framework/operator-sdk/internal/scaffold"
 	// "github.com/operator-framework/operator-sdk/internal/scaffold/ansible"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/manager"
+	// "github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/manager"
 	// "github.com/operator-framework/operator-sdk/internal/scaffold/helm"
 	// "github.com/operator-framework/operator-sdk/internal/scaffold/input"
 	// "github.com/operator-framework/operator-sdk/internal/util/projutil"
@@ -104,7 +104,7 @@ func (s *initScaffolder) scaffold() error {
 	// }
 	return machinery.NewScaffold().Execute(
 		s.newUniverse(),
-		&manager.Config{Image: imageName},
+		// &manager.Config{Image: imageName},
 		&templates.Dockerfile{GeneratePlaybook: s.generatePlaybook},
 
 		// &ansible.RolesReadme{Resource: *resource},
