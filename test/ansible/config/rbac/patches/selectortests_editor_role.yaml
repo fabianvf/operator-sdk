@@ -22,3 +22,5 @@
     - selectortests/status
     verbs:
     - get
+    - update
+    - patch

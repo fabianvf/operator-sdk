@@ -22,3 +22,5 @@
     - collectiontests/status
     verbs:
     - get
+    - update
+    - patch
