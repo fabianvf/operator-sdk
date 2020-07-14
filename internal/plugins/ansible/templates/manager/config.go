@@ -76,7 +76,7 @@ spec:
         - manager
         image: {{ .Image }}
         name: manager
-				# resources:
+        # resources:
         #   limits:
         #     cpu: 100m
         #     memory: 90Mi

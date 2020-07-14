@@ -174,7 +174,6 @@ func doAnsibleAPIScaffold() error {
 		AbsProjectPath: absProjectPath,
 	}
 
-	// TODO(asmacdo) tag: QWE this is what happens with add api
 	roleFiles := ansible.RolesFiles{Resource: *r}
 	roleTemplates := ansible.RolesTemplates{Resource: *r}
 
