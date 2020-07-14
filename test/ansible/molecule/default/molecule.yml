@@ -22,8 +22,7 @@ provisioner:
     host_vars:
       localhost:
         ansible_python_interpreter: '{{ ansible_playbook_python }}'
-        deploy_dir: ${MOLECULE_PROJECT_DIRECTORY}/deploy
-        template_dir: ${MOLECULE_PROJECT_DIRECTORY}/molecule/templates
+        config_dir: ${MOLECULE_PROJECT_DIRECTORY}/config
         operator_image: ${OPERATOR_IMAGE:-""}
         operator_pull_policy: ${OPERATOR_PULL_POLICY:-"Always"}
   env:

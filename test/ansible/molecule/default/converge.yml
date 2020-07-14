@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  collections:
+    - community.kubernetes
+
+  tasks:
+  - name: Build kustomize testing overlay
+    command: kustomize build testing
+    args:
+      chdir: '{{ config_dir }}'
+    register: resources
+  - name: Create resources
+    k8s:
+      definition: '{{ item }}'
+      wait: yes
+    loop: '{{ resources.stdout | from_yaml_all | list }}'
