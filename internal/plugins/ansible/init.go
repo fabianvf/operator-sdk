@@ -24,12 +24,13 @@ import (
 	"strings"
 
 	"github.com/spf13/pflag"
+	"k8s.io/apimachinery/pkg/util/validation"
 	"sigs.k8s.io/kubebuilder/pkg/model/config"
 	"sigs.k8s.io/kubebuilder/pkg/plugin"
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
-	"github.com/operator-framework/operator-sdk/joe/pkg/notinternal/kubebuilder/cmdutil"
-	"github.com/operator-framework/operator-sdk/joe/pkg/notinternal/kubebuilder/validation"
+	"github.com/operator-framework/operator-sdk/internal/kubebuilder/cmdutil"
+	// "github.com/operator-framework/operator-sdk/internal/kubebuilder/validation"
 	// "github.com/operator-framework/operator-sdk/joe/pkg/plugin/v1/scaffolds"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/scaffolds"
 )
