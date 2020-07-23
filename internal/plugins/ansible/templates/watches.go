@@ -107,7 +107,6 @@ const watchFragment = `- version: {{.Resource.Version}}
   group: {{.Resource.Domain}}
   kind: {{.Resource.Kind}}
   {{- if .GeneratePlaybook }}
-  # TODO(asmacdo) do we need playbooks/ here or does it know?
   playbook: {{ .PlaybooksDir }}/{{ .Resource.Kind | lower }}.yml
   {{- else if .GenerateRole}}
   role: {{ .Resource.Kind | lower }}

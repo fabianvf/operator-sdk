@@ -22,14 +22,12 @@ import (
 	"strings"
 
 	"github.com/spf13/pflag"
-	// "k8s.io/apimachinery/pkg/util/validation"
 	"sigs.k8s.io/kubebuilder/pkg/model/config"
 	"sigs.k8s.io/kubebuilder/pkg/model/resource"
 	"sigs.k8s.io/kubebuilder/pkg/plugin"
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
 	"github.com/operator-framework/operator-sdk/internal/kubebuilder/cmdutil"
-	// "github.com/operator-framework/operator-sdk/internal/kubebuilder/validation"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/scaffolds"
 )
 
@@ -84,7 +82,6 @@ func (p *createAPIPlugin) Run() error {
 	return cmdutil.Run(p)
 }
 
-// TODO(asmacdo) validate
 func (p *createAPIPlugin) Validate() error {
 	if p.createOptions.CRDVersion != crdVersionV1 && p.createOptions.CRDVersion != crdVersionV1beta1 {
 		return fmt.Errorf("value of --%s must be either %q or %q", crdVersionFlag, crdVersionV1, crdVersionV1beta1)
