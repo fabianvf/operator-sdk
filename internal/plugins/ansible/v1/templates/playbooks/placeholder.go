@@ -17,7 +17,7 @@ package playbooks
 import (
 	"sigs.k8s.io/kubebuilder/pkg/model/file"
 
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/constants"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/constants"
 )
 
 const placeholderPath = "playbooks" + constants.FilePathSep + ".placeholder"

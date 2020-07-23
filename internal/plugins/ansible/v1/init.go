@@ -30,7 +30,7 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
 	"github.com/operator-framework/operator-sdk/internal/kubebuilder/cmdutil"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/scaffolds"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds"
 )
 
 type initPlugin struct {

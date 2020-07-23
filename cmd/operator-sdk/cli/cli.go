@@ -26,7 +26,7 @@ import (
 	"github.com/operator-framework/operator-sdk/cmd/operator-sdk/scorecard"
 	"github.com/operator-framework/operator-sdk/cmd/operator-sdk/version"
 	"github.com/operator-framework/operator-sdk/internal/flags"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible"
+	ansiblev1 "github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1"
 	golangv2 "github.com/operator-framework/operator-sdk/internal/plugins/golang/v2"
 	helmv1 "github.com/operator-framework/operator-sdk/internal/plugins/helm/v1"
 	"github.com/operator-framework/operator-sdk/internal/util/projutil"
@@ -66,7 +66,7 @@ func GetPluginsCLIAndRoot() (cli.CLI, *cobra.Command) {
 		cli.WithPlugins(
 			&golangv2.Plugin{},
 			&helmv1.Plugin{},
-			&ansible.Plugin{},
+			&ansiblev1.Plugin{},
 		),
 		cli.WithDefaultPlugins(
 			&golangv2.Plugin{},
