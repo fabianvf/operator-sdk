@@ -57,12 +57,6 @@ func (f *Manager) SetTemplateDefaults() error {
 	return nil
 }
 
-// TODO(asmacdo): add the arg --enable-leader-election to the manager
-// like helm: https://github.com/operator-framework/operator-sdk/issues/3356
-
-// TODO(asmacdo): add the arg --metrics-addr to the manager
-// like helm: https://github.com/operator-framework/operator-sdk/issues/3358
-
 const configTemplate = `apiVersion: v1
 kind: Namespace
 metadata:
@@ -88,18 +82,12 @@ spec:
         control-plane: controller-manager
     spec:
       containers:
-      - args:
-        - manager
+      - name: manager
+        args:
+        - "--enable-leader-election"
+        - "--leader-election-id={{ .OperatorName }}"
+        - "--metrics-addr=127.0.0.1:8080"
         image: {{ .Image }}
-        name: manager
-        # TODO(asmacdo) file a story
-        # resources:
-        #   limits:
-        #     cpu: 100m
-        #     memory: 90Mi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 60Mi
         env:
           - name: WATCH_NAMESPACE
             value: ""
