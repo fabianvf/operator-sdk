@@ -27,8 +27,3 @@ const (
 	MoleculeClusterDir   = MoleculeDir + FilePathSep + "cluster"
 	MoleculeTemplatesDir = MoleculeDir + FilePathSep + "templates"
 )
-
-// TODO(asmacdo) can this go?
-// AnsibleDelims is a slice of two strings representing the left and right delimiters for ansible templates.
-// Arrays can't be constants but this should be a constant.
-var AnsibleDelims = [2]string{"[[", "]]"}

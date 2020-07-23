@@ -81,7 +81,6 @@ func (f *KustomizeUpdater) GetCodeFragments() file.CodeFragmentsMap {
 	patches = append(patches, f.Resource.Replacer().Replace(patch6902Fragment))
 
 	if len(patches) != 0 {
-		fmt.Println("patches len!=0")
 		fragments[file.NewMarkerFor(rbacKustomizePath, patch6902Marker)] = patches
 	}
 	return fragments

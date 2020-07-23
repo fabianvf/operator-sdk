@@ -18,21 +18,18 @@ limitations under the License.
 package ansible
 
 import (
-	// TODO(asmacdo) clean up
 	"fmt"
-	// "os"
-	// "path/filepath"
-	// "strings"
+	"strings"
 
 	"github.com/spf13/pflag"
 	// "k8s.io/apimachinery/pkg/util/validation"
 	"sigs.k8s.io/kubebuilder/pkg/model/config"
+	"sigs.k8s.io/kubebuilder/pkg/model/resource"
 	"sigs.k8s.io/kubebuilder/pkg/plugin"
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
 	"github.com/operator-framework/operator-sdk/internal/kubebuilder/cmdutil"
 	// "github.com/operator-framework/operator-sdk/internal/kubebuilder/validation"
-	// "github.com/operator-framework/operator-sdk/joe/pkg/plugin/v1/scaffolds"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/scaffolds"
 )
 
@@ -56,7 +53,7 @@ var (
 	_ cmdutil.RunOptions = &createAPIPlugin{}
 )
 
-// TODO(asmacdo) document this
+// TODO(asmacdo) more examples
 func (p *createAPIPlugin) UpdateContext(ctx *plugin.Context) {
 	ctx.Description = `Scaffold a Kubernetes API in which the controller is an Ansible role or playbook.
 `
@@ -75,8 +72,8 @@ func (p *createAPIPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&p.createOptions.GVK.Version, versionFlag, "", "resource version")
 	fs.StringVar(&p.createOptions.GVK.Kind, kindFlag, "", "resource kind")
 	fs.StringVar(&p.createOptions.CRDVersion, crdVersionFlag, crdVersionV1, "crd version to generate")
-	fs.BoolVarP(&p.createOptions.GeneratePlaybook, "generate-playbook", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
-	fs.BoolVarP(&p.createOptions.GenerateRole, "generate-role", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
+	fs.BoolVarP(&p.createOptions.GeneratePlaybook, "generate-playbook", "", false, "Generate an Ansible playbook skeleton.")
+	fs.BoolVarP(&p.createOptions.GenerateRole, "generate-role", "", false, "Generate an Ansible role skeleton.")
 }
 
 func (p *createAPIPlugin) InjectConfig(c *config.Config) {
@@ -89,7 +86,31 @@ func (p *createAPIPlugin) Run() error {
 
 // TODO(asmacdo) validate
 func (p *createAPIPlugin) Validate() error {
-	// TODO(asmacdo) must not be empty
+	if p.createOptions.CRDVersion != crdVersionV1 && p.createOptions.CRDVersion != crdVersionV1beta1 {
+		return fmt.Errorf("value of --%s must be either %q or %q", crdVersionFlag, crdVersionV1, crdVersionV1beta1)
+	}
+
+	if len(strings.TrimSpace(p.createOptions.GVK.Group)) == 0 {
+		return fmt.Errorf("value of --%s must not have empty value", groupFlag)
+	}
+	if len(strings.TrimSpace(p.createOptions.GVK.Version)) == 0 {
+		return fmt.Errorf("value of --%s must not have empty value", versionFlag)
+	}
+	if len(strings.TrimSpace(p.createOptions.GVK.Kind)) == 0 {
+		return fmt.Errorf("value of --%s must not have empty value", kindFlag)
+	}
+
+	// Validate the resource.
+	r := resource.Options{
+		Namespaced: true,
+		Group:      p.createOptions.GVK.Group,
+		Version:    p.createOptions.GVK.Version,
+		Kind:       p.createOptions.GVK.Kind,
+	}
+	if err := r.Validate(); err != nil {
+		return err
+	}
+
 	return nil
 }
 

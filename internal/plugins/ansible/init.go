@@ -53,11 +53,21 @@ func (p *initPlugin) UpdateContext(ctx *plugin.Context) {
 	p.commandName = ctx.CommandName
 }
 
+// TODO(asmacdo) more examples
+func (p *createAPIPlugin) UpdateContext(ctx *plugin.Context) {
+	ctx.Description = `Initialize a new Ansible-based operator project.
+`
+	ctx.Examples = fmt.Sprintf(`  $ %s create api \
+      --group=apps --version=v1alpha1 \
+      --kind=AppService
+`,
+		ctx.CommandName,
+	)
+}
 func (p *initPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.SortFlags = false
 	fs.StringVar(&p.config.Domain, "domain", "my.domain", "domain for groups")
 	p.apiPlugin.BindFlags(fs)
-	// TODO(asmacdo) short flags?
 }
 
 func (p *initPlugin) InjectConfig(c *config.Config) {
@@ -81,7 +91,6 @@ func (p *initPlugin) Validate() error {
 		return fmt.Errorf("project name (%s) is invalid: %v", projectName, err)
 	}
 
-	// TODO(asmacdo)
 	defaultOpts := scaffolds.CreateOptions{CRDVersion: "v1"}
 	if !p.apiPlugin.createOptions.GVK.Empty() || p.apiPlugin.createOptions != defaultOpts {
 		p.doAPIScaffold = true

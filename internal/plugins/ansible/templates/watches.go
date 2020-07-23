@@ -81,6 +81,8 @@ func (f *WatchesUpdater) GetCodeFragments() file.CodeFragmentsMap {
 	// Generate watch fragments
 	watches := make([]string, 0)
 	buf := &bytes.Buffer{}
+
+	// TODO(asmacdo) Move template execution into a function, executed by the apiScaffolder.scaffold()
 	// DefaultFuncMap used provide the function "lower", used in the watch fragment.
 	tmpl := template.Must(template.New("rules").Funcs(file.DefaultFuncMap()).Parse(watchFragment))
 	err := tmpl.Execute(buf, f)
