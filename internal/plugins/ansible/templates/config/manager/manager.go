@@ -81,20 +81,20 @@ spec:
         control-plane: controller-manager
     spec:
       containers:
-      - name: manager
-        args:
-        - "--enable-leader-election"
-        - "--leader-election-id={{ .OperatorName }}"
-        - "--metrics-addr=127.0.0.1:8080"
-        image: {{ .Image }}
-        env:
-          - name: WATCH_NAMESPACE
-            value: ""
-          - name: POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
-          - name: OPERATOR_NAME
-            value: {{ .OperatorName }}
+        - name: manager
+          args:
+            - "--enable-leader-election"
+            - "--leader-election-id={{ .OperatorName }}"
+            - "--metrics-addr=127.0.0.1:8080"
+          image: {{ .Image }}
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: {{ .OperatorName }}
       terminationGracePeriodSeconds: 10
 `

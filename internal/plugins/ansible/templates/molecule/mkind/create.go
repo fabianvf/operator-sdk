@@ -43,5 +43,5 @@ const createTemplate = `---
   gather_facts: false
   tasks:
     - name: Create test kind cluster
-      command: kind create cluster --name osdk-test --kubeconfig {{ kubeconfig }}
+      command: kind create cluster --name osdk-test --kubeconfig {{ "{{ kubeconfig }}" }}
 `

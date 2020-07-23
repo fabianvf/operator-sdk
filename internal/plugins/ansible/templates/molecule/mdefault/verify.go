@@ -46,10 +46,10 @@ const verifyTemplate = `---
 
   tasks:
     - block:
-      - name: Import all test files from tasks/
-        include_tasks: '{{ "{{ item }}" }}'
-        with_fileglob:
-          - tasks/*_test.yml
+        - name: Import all test files from tasks/
+          include_tasks: '{{ "{{ item }}" }}'
+          with_fileglob:
+            - tasks/*_test.yml
       rescue:
         - name: Retrieve relevant resources
           k8s_info:

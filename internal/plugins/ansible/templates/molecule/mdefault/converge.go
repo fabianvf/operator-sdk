@@ -37,7 +37,6 @@ func (f *Converge) SetTemplateDefaults() error {
 }
 
 const convergeTemplate = `---
----
 - name: Converge
   hosts: localhost
   connection: local

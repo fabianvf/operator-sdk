@@ -45,9 +45,9 @@ lint: |
   set -e
   yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" .
 platforms:
-- name: cluster
-  groups:
-  - k8s
+  - name: cluster
+    groups:
+      - k8s
 provisioner:
   name: ansible
   lint: |
@@ -61,7 +61,7 @@ provisioner:
       localhost:
         ansible_python_interpreter: '{{ "{{ ansible_playbook_python }}" }}'
         config_dir: ${MOLECULE_PROJECT_DIRECTORY}/config
-				samples_dir: ${MOLECULE_PROJECT_DIRECTORY}/config/samples
+        samples_dir: ${MOLECULE_PROJECT_DIRECTORY}/config/samples
         operator_image: ${OPERATOR_IMAGE:-""}
         operator_pull_policy: ${OPERATOR_PULL_POLICY:-"Always"}
   env:

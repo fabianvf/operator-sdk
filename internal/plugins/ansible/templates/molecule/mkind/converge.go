@@ -58,5 +58,5 @@ const convergeTemplate = `---
       register: result
       changed_when: '"not yet present" in result.stdout'
 
-- import_playbook: ../kind/converge.yml
+- import_playbook: ../default/converge.yml
 `

@@ -32,7 +32,7 @@ type ResourceTest struct {
 // SetTemplateDefaults implements input.Template
 func (f *ResourceTest) SetTemplateDefaults() error {
 	if f.Path == "" {
-		f.Path = filepath.Join("molecule", "default", "%[kind]_test.yml)")
+		f.Path = filepath.Join("molecule", "default", "tasks", "%[kind]_test.yml")
 		f.Path = f.Resource.Replacer().Replace(f.Path)
 	}
 	f.SampleFile = f.Resource.Replacer().Replace("%[group]_%[version]_%[kind].yaml")
@@ -54,7 +54,7 @@ const resourceTestTemplate = `---
       reason: Successful
       status: "True"
   vars:
-    cr_file: '{{ f.sampleFile }}'
+    cr_file: '{{ .SampleFile }}'
 
 - name: Add assertions here
   assert:

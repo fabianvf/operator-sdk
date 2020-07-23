@@ -40,7 +40,7 @@ func (f *ServiceMonitor) SetTemplateDefaults() error {
 	return nil
 }
 
-const serviceMonitorTemplate = `
+const serviceMonitorTemplate = `---
 # Prometheus Monitor Service (Metrics)
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
