@@ -34,6 +34,7 @@ import (
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/crd"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/rbac"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/samples"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/molecule/mdefault"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/playbooks"
 	ansibleroles "github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/roles"
 )
@@ -103,6 +104,7 @@ func (s *apiScaffolder) scaffold() error {
 		&crd.Kustomization{},
 		&samples.CR{},
 		&templates.WatchesUpdater{GeneratePlaybook: s.opts.GeneratePlaybook, GenerateRole: s.opts.GenerateRole, PlaybooksDir: constants.PlaybooksDir},
+		&mdefault.ResourceTest{},
 	)
 	if s.opts.GenerateRole {
 		createAPITemplates = append(createAPITemplates,

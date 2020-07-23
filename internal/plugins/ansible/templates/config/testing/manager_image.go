@@ -1,5 +1,6 @@
 /*
-Copyright 2020 The Kubernetes Authors.
+Copyright 2018 The Kubernetes Authors.
+Modifications copyright 2020 The Operator-SDK Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package prometheus
+package testing
 
 import (
 	"path/filepath"
@@ -22,38 +23,37 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/model/file"
 )
 
-var _ file.Template = &ServiceMonitor{}
+var _ file.Template = &ManagerImage{}
 
-// ServiceMonitor scaffolds an issuer CR and a certificate CR
-type ServiceMonitor struct {
+// ManagerImage scaffolds the patch file for overriding the
+// default image during Ansible testing
+type ManagerImage struct {
 	file.TemplateMixin
 }
 
 // SetTemplateDefaults implements input.Template
-func (f *ServiceMonitor) SetTemplateDefaults() error {
+func (f *ManagerImage) SetTemplateDefaults() error {
 	if f.Path == "" {
-		f.Path = filepath.Join("config", "prometheus", "monitor.yaml")
+		f.Path = filepath.Join("config", "testing", "manager_image.yaml")
 	}
 
-	f.TemplateBody = serviceMonitorTemplate
+	f.TemplateBody = managerImageTemplate
+
+	f.IfExistsAction = file.Error
 
 	return nil
 }
 
-const serviceMonitorTemplate = `---
-# Prometheus Monitor Service (Metrics)
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+const managerImageTemplate = `---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  labels:
-    control-plane: controller-manager
-  name: controller-manager-metrics-monitor
+  name: controller-manager
   namespace: system
 spec:
-  endpoints:
-    - path: /metrics
-      port: https
-  selector:
-    matchLabels:
-      control-plane: controller-manager
+  template:
+    spec:
+      containers:
+        - name: manager
+          image: testing
 `

@@ -75,7 +75,7 @@ bases:
 - ../crd
 - ../rbac
 - ../manager
-# [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'. 
+# [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'.
 #- ../prometheus
 
 patchesStrategicMerge:
