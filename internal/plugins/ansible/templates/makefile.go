@@ -1,5 +1,4 @@
 /*
-TODO(asmacdo) Modified
 Copyright 2019 The Kubernetes Authors.
 Modifications copyright 2020 The Operator-SDK Authors
 
@@ -42,7 +41,6 @@ type Makefile struct {
 	AnsibleOperatorVersion string
 }
 
-// TODO(asmacdo) is this true? if not change everywhere
 // SetTemplateDefaults implements input.Template
 func (f *Makefile) SetTemplateDefaults() error {
 	if f.Path == "" {
@@ -75,16 +73,12 @@ IMG ?= {{ .Image }}
 all: docker-build
 
 # Run against the configured Kubernetes cluster in ~/.kube/config
-# TODO(asmacdo)
-# run: ansible-operator
-run: 
-	# TODO(asmacdo) where is ANSIBLE_OPERATOR (HELM_OPERATOR) set?
-	$(ANSIBLE_OPERATOR) run
+run: ansible-operator
+	$(ANSIBLE_OPERATOR)
 
-# TODO(asmacdo) remove this, make deploy will install the crds.
 # Install CRDs into a cluster
-#install: kustomize
-#	$(KUSTOMIZE) build config/crd | kubectl apply -f -
+install: kustomize
+	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 
 # Uninstall CRDs from a cluster
 uninstall: kustomize
@@ -126,17 +120,17 @@ else
 KUSTOMIZE=$(shell which kustomize)
 endif
 
-# helm-operator:
-# ifeq (, $(shell which helm-operator 2>/dev/null))
-# 	@{ \
-# 	set -e ;\
-# 	mkdir -p bin ;\
-# 	curl -LO https://github.com/operator-framework/operator-sdk/releases/download/{{ .AnsibleOperatorVersion}}/ansible-operator-{{ .AnsibleOperatorVersion}}-$(ARCHOPER)-$(OSOPER) ;\
-# 	mv ansible-operator-{{ .AnsibleOperatorVersion}}-$(ARCHOPER)-$(OSOPER) ./bin/ansible-operator ;\
-# 	chmod +x ./bin/helm-operator ;\
-# 	}
-# ANSIBLE_OPERATOR=./bin/ansible-operator
-# else
-# ANSIBLE_OPERATOR=$(shell which ansible-operator)
-# endif
+ansible-operator:
+ifeq (, $(shell which ansible-operator 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p bin ;\
+	curl -LO https://github.com/operator-framework/operator-sdk/releases/download/{{ .AnsibleOperatorVersion}}/ansible-operator-{{ .AnsibleOperatorVersion}}-$(ARCHOPER)-$(OSOPER) ;\
+	mv ansible-operator-{{ .AnsibleOperatorVersion}}-$(ARCHOPER)-$(OSOPER) ./bin/ansible-operator ;\
+	chmod +x ./bin/ansible-operator ;\
+	}
+ANSIBLE_OPERATOR=$(realpath ./bin/ansible-operator)
+else
+ANSIBLE_OPERATOR=$(shell which ansible-operator)
+endif
 `
