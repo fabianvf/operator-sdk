@@ -94,7 +94,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: OPERATOR_NAME
-              value: {{ .OperatorName }}
       terminationGracePeriodSeconds: 10
 `
