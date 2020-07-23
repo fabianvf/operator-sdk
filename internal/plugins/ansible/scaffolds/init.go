@@ -27,6 +27,8 @@ import (
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/manager"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/prometheus"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/rbac"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/molecule/mdefault"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/molecule/mkind"
 
 	"github.com/operator-framework/operator-sdk/internal/kubebuilder/machinery"
 )
@@ -99,5 +101,17 @@ func (s *initScaffolder) scaffold() error {
 
 		// TODO(asmacdo) audit makefile
 		&templates.Makefile{},
+
+		&mdefault.Converge{},
+		&mdefault.Create{},
+		&mdefault.Destroy{},
+		&mdefault.Kustomize{},
+		&mdefault.Molecule{},
+		&mdefault.Prepare{},
+		&mdefault.Verify{},
+		&mkind.Converge{},
+		&mkind.Create{},
+		&mkind.Destroy{},
+		&mkind.Molecule{},
 	)
 }
