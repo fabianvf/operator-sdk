@@ -42,31 +42,31 @@ func (f *CRDEditorRole) SetTemplateDefaults() error {
 	return nil
 }
 
-const crdRoleEditorTemplate = `
+const crdRoleEditorTemplate = `---
 - op: add
   path: /rules/-
   value:
     apiGroups:
-     - {{ .Resource.Domain }}
+      - {{ .Resource.Domain }}
     resources:
-     - {{ .Resource.Plural }}
+      - {{ .Resource.Plural }}
     verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
 - op: add
   path: /rules/-
   value:
     apiGroups:
-     - {{ .Resource.Domain }}
+      - {{ .Resource.Domain }}
     resources:
-     - {{ .Resource.Plural }}/status
+      - {{ .Resource.Plural }}/status
     verbs:
-    - get
-    - patch
-    - update
+      - get
+      - patch
+      - update
 `

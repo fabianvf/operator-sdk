@@ -65,8 +65,7 @@ func (f *CR) GetFuncMap() template.FuncMap {
 	return fm
 }
 
-const defaultSpecTemplate = `foo: bar
-`
+const defaultSpecTemplate = `foo: bar`
 
 const crSampleTemplate = `apiVersion: {{ .Resource.Domain }}/{{ .Resource.Version }}
 kind: {{ .Resource.Kind }}
