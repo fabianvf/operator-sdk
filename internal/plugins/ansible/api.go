@@ -19,7 +19,7 @@ package ansible
 
 import (
 	// TODO(asmacdo) clean up
-	// "fmt"
+	"fmt"
 	// "os"
 	// "path/filepath"
 	// "strings"
@@ -50,17 +50,8 @@ const (
 )
 
 type createAPIPlugin struct {
-	config *config.Config
-
-	group   string
-	version string
-	kind    string
-
-	// CRDVersion is the version of the `apiextensions.k8s.io` API which will be used to generate the CRD.
-	CRDVersion string
-
-	// For help text.
-	commandName string
+	config        *config.Config
+	createOptions scaffolds.CreateOptions
 }
 
 var (
@@ -70,16 +61,23 @@ var (
 
 // TODO(asmacdo) document this
 func (p *createAPIPlugin) UpdateContext(ctx *plugin.Context) {
-	p.commandName = ctx.CommandName
+	ctx.Description = `Scaffold a Kubernetes API in which the controller is an Ansible role or playbook.
+`
+	ctx.Examples = fmt.Sprintf(`  $ %s create api \
+      --group=apps --version=v1alpha1 \
+      --kind=AppService
+`,
+		ctx.CommandName,
+	)
 }
 
 func (p *createAPIPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.SortFlags = false
-	// TODO(asmacdo) short flags?
-	fs.StringVar(&p.group, "group", "", "TODO(asmacdo) help text")
-	fs.StringVar(&p.version, "version", "", "TODO(asmacdo) help text")
-	fs.StringVar(&p.kind, "kind", "", "TODO(asmacdo) help text")
-	fs.StringVar(&p.CRDVersion, crdVersionFlag, crdVersionV1, "crd versionFlag to generate")
+
+	fs.StringVar(&p.createOptions.GVK.Group, groupFlag, "", "resource group")
+	fs.StringVar(&p.createOptions.GVK.Version, versionFlag, "", "resource version")
+	fs.StringVar(&p.createOptions.GVK.Kind, kindFlag, "", "resource kind")
+	fs.StringVar(&p.createOptions.CRDVersion, crdVersionFlag, crdVersionV1, "crd version to generate")
 }
 
 func (p *createAPIPlugin) InjectConfig(c *config.Config) {
@@ -97,7 +95,7 @@ func (p *createAPIPlugin) Validate() error {
 }
 
 func (p *createAPIPlugin) GetScaffolder() (scaffold.Scaffolder, error) {
-	return scaffolds.NewCreateAPIScaffolder(p.config, p.group, p.version, p.kind, p.CRDVersion), nil
+	return scaffolds.NewCreateAPIScaffolder(p.config, p.createOptions), nil
 }
 
 func (p *createAPIPlugin) PostScaffold() error {

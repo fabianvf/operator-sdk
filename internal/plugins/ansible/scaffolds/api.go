@@ -17,6 +17,10 @@ limitations under the License.
 package scaffolds
 
 import (
+	"errors"
+	"fmt"
+
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/kubebuilder/pkg/model"
 	"sigs.k8s.io/kubebuilder/pkg/model/config"
 	"sigs.k8s.io/kubebuilder/pkg/model/resource"
@@ -32,26 +36,22 @@ import (
 
 var _ scaffold.Scaffolder = &apiScaffolder{}
 
-type apiScaffolder struct {
-	config *config.Config
-
-	// TODO(asmacdo) config.GVK?
-	group   string
-	version string
-	kind    string
-
+type CreateOptions struct {
+	GVK schema.GroupVersionKind
 	// CRDVersion is the version of the `apiextensions.k8s.io` API which will be used to generate the CRD.
 	CRDVersion string
 }
 
+type apiScaffolder struct {
+	config *config.Config
+	opts   CreateOptions
+}
+
 // NewCreateAPIScaffolder returns a new Scaffolder for project initialization operations
-func NewCreateAPIScaffolder(config *config.Config, group string, version string, kind string, crdVersion string) scaffold.Scaffolder {
+func NewCreateAPIScaffolder(config *config.Config, opts CreateOptions) scaffold.Scaffolder {
 	return &apiScaffolder{
-		config:     config,
-		group:      group,
-		version:    version,
-		kind:       kind,
-		CRDVersion: crdVersion,
+		config: config,
+		opts:   opts,
 	}
 }
 
@@ -70,22 +70,20 @@ func (s *apiScaffolder) Scaffold() error {
 func (s *apiScaffolder) scaffold() error {
 
 	resourceOptions := resource.Options{
-		Group:   s.group,
-		Version: s.version,
-		Kind:    s.kind,
+		Group:   s.opts.GVK.Group,
+		Version: s.opts.GVK.Version,
+		Kind:    s.opts.GVK.Kind,
 	}
 
-	// TODO(asmacdo)
-	// if s.config.HasResource(resourceOptions.GVK()) {
-	// 	return errors.New("the API resource already exists")
-	// }
+	if s.config.HasResource(resourceOptions.GVK()) {
+		return errors.New("the API resource already exists")
+	}
 
-	// TODO(asmacdo)
 	// Check that the provided group can be added to the project
-	// if !s.config.MultiGroup && len(s.config.Resources) != 0 && !s.config.HasGroup(r.Group) {
-	// 	return fmt.Errorf("multiple groups are not allowed by default, to enable multi-group visit %s",
-	// 		"kubebuilder.io/migration/multi-group.html")
-	// }
+	if !s.config.MultiGroup && len(s.config.Resources) != 0 && !s.config.HasGroup(resourceOptions.Group) {
+		return fmt.Errorf("multiple groups are not allowed by default, to enable multi-group visit %s",
+			"kubebuilder.io/migration/multi-group.html")
+	}
 
 	resource := resourceOptions.NewResource(s.config, true)
 	s.config.AddResource(resource.GVK())
@@ -94,7 +92,7 @@ func (s *apiScaffolder) scaffold() error {
 		&rbac.CRDEditorRole{},
 		&rbac.KustomizeUpdater{},
 
-		&crd.CRD{CRDVersion: s.CRDVersion},
+		&crd.CRD{CRDVersion: s.opts.CRDVersion},
 		&crd.Kustomization{},
 		&samples.CR{},
 		&templates.WatchesUpdater{},

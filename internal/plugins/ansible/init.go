@@ -84,8 +84,8 @@ func (p *initPlugin) Validate() error {
 	}
 
 	// TODO(asmacdo)
-	// if !p.apiPlugin.gvk.Empty() || p.apiPlugin.createOptions != defaultOpts {
-	if p.apiPlugin.group != "" {
+	defaultOpts := scaffolds.CreateOptions{CRDVersion: "v1"}
+	if !p.apiPlugin.createOptions.GVK.Empty() || p.apiPlugin.createOptions != defaultOpts {
 		p.doAPIScaffold = true
 		return p.apiPlugin.Validate()
 	}
