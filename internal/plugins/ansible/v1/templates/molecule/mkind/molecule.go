@@ -64,6 +64,7 @@ provisioner:
       localhost:
         ansible_python_interpreter: '{{ "{{ ansible_playbook_python }}" }}'
         config_dir: ${MOLECULE_PROJECT_DIRECTORY}/config
+        samples_dir: ${MOLECULE_PROJECT_DIRECTORY}/config/samples
         project_dir: ${MOLECULE_PROJECT_DIRECTORY}
         operator_image: testing-operator
         pull_policy: "Never"

@@ -52,6 +52,7 @@ const convergeTemplate = `---
         tag: latest
         push: no
         source: build
+        force_source: yes
 
     - name: Load image into kind cluster
       command: kind load docker-image --name osdk-test '{{ "{{ operator_image }}" }}'

@@ -59,4 +59,5 @@ const resourceTestTemplate = `---
 - name: Add assertions here
   assert:
     that: false
+		fail_msg: FIXME Add real assertions for your operator
 `
