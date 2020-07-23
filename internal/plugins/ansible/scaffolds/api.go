@@ -20,8 +20,6 @@ package scaffolds
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"strings"
 
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/kubebuilder/pkg/model"
@@ -31,10 +29,12 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
 	"github.com/operator-framework/operator-sdk/internal/kubebuilder/machinery"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/constants"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/crd"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/rbac"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/config/samples"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/playbooks"
 	ansibleroles "github.com/operator-framework/operator-sdk/internal/plugins/ansible/templates/roles"
 )
 
@@ -94,11 +94,6 @@ func (s *apiScaffolder) scaffold() error {
 	resource := resourceOptions.NewResource(s.config, true)
 	s.config.AddResource(resource.GVK())
 
-	err := s.updateDockerfile()
-	if err != nil {
-		return err
-	}
-
 	var createAPITemplates []file.Builder
 	createAPITemplates = append(createAPITemplates,
 		&rbac.CRDEditorRole{},
@@ -107,7 +102,7 @@ func (s *apiScaffolder) scaffold() error {
 		&crd.CRD{CRDVersion: s.opts.CRDVersion},
 		&crd.Kustomization{},
 		&samples.CR{},
-		&templates.WatchesUpdater{},
+		&templates.WatchesUpdater{GeneratePlaybook: s.opts.GeneratePlaybook, GenerateRole: s.opts.GenerateRole, PlaybooksDir: constants.PlaybooksDir},
 	)
 	if s.opts.GenerateRole {
 		createAPITemplates = append(createAPITemplates,
@@ -123,28 +118,10 @@ func (s *apiScaffolder) scaffold() error {
 	}
 
 	if s.opts.GeneratePlaybook {
-		createAPITemplates = append(createAPITemplates, &templates.Playbook{})
+		createAPITemplates = append(createAPITemplates, &playbooks.Playbook{})
 	}
 	return machinery.NewScaffold().Execute(
 		s.newUniverse(resource),
 		createAPITemplates...,
 	)
-}
-
-func (s *apiScaffolder) updateDockerfile() error {
-	filename := "Dockerfile"
-	bs, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
-	}
-	str := string(bs)
-
-	// update dockerfile
-	if s.opts.GeneratePlaybook && !strings.Contains(str, templates.PlaybooksFragment) {
-		str = str + templates.PlaybooksFragment
-	}
-	if s.opts.GenerateRole && !strings.Contains(str, templates.RolesFragment) {
-		str = str + templates.RolesFragment
-	}
-	return ioutil.WriteFile(filename, []byte(str), 0644)
 }

@@ -12,19 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package constants
+package roles
 
 import (
-	"path/filepath"
+	"sigs.k8s.io/kubebuilder/pkg/model/file"
+
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/constants"
 )
 
-const (
-	FilePathSep          = string(filepath.Separator)
-	RolesDir             = "roles"
-	PlaybooksDir         = "playbooks"
-	MoleculeDir          = "molecule"
-	MoleculeDefaultDir   = MoleculeDir + FilePathSep + "default"
-	MoleculeTestLocalDir = MoleculeDir + FilePathSep + "test-local"
-	MoleculeClusterDir   = MoleculeDir + FilePathSep + "cluster"
-	MoleculeTemplatesDir = MoleculeDir + FilePathSep + "templates"
-)
+const placeholderPath = "roles" + constants.FilePathSep + ".placeholder"
+
+type Placeholder struct {
+	file.TemplateMixin
+}
+
+// SetTemplateDefaults implements input.Template
+func (f *Placeholder) SetTemplateDefaults() error {
+	if f.Path == "" {
+		f.Path = placeholderPath
+	}
+	f.TemplateBody = placeholderTemplate
+	return nil
+}
+
+const placeholderTemplate = ``

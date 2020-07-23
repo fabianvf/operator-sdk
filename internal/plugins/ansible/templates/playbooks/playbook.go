@@ -12,19 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package templates
+package playbooks
 
 import (
+	"path/filepath"
+
 	"sigs.k8s.io/kubebuilder/pkg/model/file"
 )
 
-// RequirementsYml - A requirements file for Ansible collection dependencies
 type Playbook struct {
 	file.TemplateMixin
 	file.ResourceMixin
 }
 
 func (f *Playbook) SetTemplateDefaults() error {
+	if f.Path == "" {
+		f.Path = filepath.Join("playbooks", "%[kind].yml")
+		f.Path = f.Resource.Replacer().Replace(f.Path)
+	}
 	if f.Path == "" {
 		f.Path = "playbook.yml"
 	}

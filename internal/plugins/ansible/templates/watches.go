@@ -53,7 +53,8 @@ type WatchesUpdater struct {
 	file.ResourceMixin
 
 	GeneratePlaybook bool
-	RolesDir         string
+	GenerateRole     bool
+	PlaybooksDir     string
 }
 
 func (*WatchesUpdater) GetPath() string {
@@ -106,8 +107,11 @@ const watchFragment = `- version: {{.Resource.Version}}
   group: {{.Resource.Domain}}
   kind: {{.Resource.Kind}}
   {{- if .GeneratePlaybook }}
-  playbook: playbook.yml
-  {{- else }}
+  # TODO(asmacdo) do we need playbooks/ here or does it know?
+  playbook: {{ .PlaybooksDir }}/{{ .Resource.Kind | lower }}.yml
+  {{- else if .GenerateRole}}
   role: {{ .Resource.Kind | lower }}
+  {{- else }}
+  # FIXME: Specify the role or playbook for this resource.
   {{- end }}
 `

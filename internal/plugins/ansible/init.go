@@ -50,20 +50,10 @@ var (
 
 // TODO(asmacdo) documentation
 func (p *initPlugin) UpdateContext(ctx *plugin.Context) {
+	ctx.Description = `Initialize a new Ansible-based operator project.`
 	p.commandName = ctx.CommandName
 }
 
-// TODO(asmacdo) more examples
-func (p *createAPIPlugin) UpdateContext(ctx *plugin.Context) {
-	ctx.Description = `Initialize a new Ansible-based operator project.
-`
-	ctx.Examples = fmt.Sprintf(`  $ %s create api \
-      --group=apps --version=v1alpha1 \
-      --kind=AppService
-`,
-		ctx.CommandName,
-	)
-}
 func (p *initPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.SortFlags = false
 	fs.StringVar(&p.config.Domain, "domain", "my.domain", "domain for groups")

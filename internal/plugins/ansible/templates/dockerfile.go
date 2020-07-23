@@ -28,9 +28,10 @@ var _ file.Template = &Dockerfile{}
 // Dockerfile scaffolds a Dockerfile for building a main
 type Dockerfile struct {
 	file.TemplateMixin
-	RolesDir         string
-	ImageTag         string
-	GeneratePlaybook bool
+	ImageTag string
+
+	RolesDir     string
+	PlaybooksDir string
 }
 
 // SetTemplateDefaults implements input.Template
@@ -41,6 +42,7 @@ func (f *Dockerfile) SetTemplateDefaults() error {
 
 	f.TemplateBody = dockerfileTemplate
 	f.RolesDir = constants.RolesDir
+	f.PlaybooksDir = constants.PlaybooksDir
 	f.ImageTag = strings.TrimSuffix(version.Version, "+git")
 	return nil
 }
@@ -52,9 +54,6 @@ RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
  && chmod -R ug+rwx ${HOME}/.ansible
 
 COPY watches.yaml ${HOME}/watches.yaml
-`
-
-const RolesFragment = `COPY {{.RolesDir}}/ ${HOME}/{{.RolesDir}}/
-`
-const PlaybooksFragment = `COPY {{.PlaybooksDir}}/ ${HOME}/{{.RolesDir}}/
+COPY {{ .RolesDir }}/ ${HOME}/{{ .RolesDir }}/
+COPY {{ .PlaybooksDir }}/ ${HOME}/{{ .PlaybooksDir }}/
 `
