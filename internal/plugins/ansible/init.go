@@ -37,8 +37,7 @@ type initPlugin struct {
 	config    *config.Config
 	apiPlugin createAPIPlugin
 
-	generatePlaybook bool
-	doAPIScaffold    bool
+	doAPIScaffold bool
 
 	// For help text.
 	commandName string
@@ -59,7 +58,6 @@ func (p *initPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&p.config.Domain, "domain", "my.domain", "domain for groups")
 	p.apiPlugin.BindFlags(fs)
 	// TODO(asmacdo) short flags?
-	fs.BoolVarP(&p.generatePlaybook, "generate-playbook", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
 }
 
 func (p *initPlugin) InjectConfig(c *config.Config) {
@@ -103,7 +101,7 @@ func (p *initPlugin) GetScaffolder() (scaffold.Scaffolder, error) {
 			return nil, err
 		}
 	}
-	return scaffolds.NewInitScaffolder(p.config, apiScaffolder, p.generatePlaybook), nil
+	return scaffolds.NewInitScaffolder(p.config, apiScaffolder), nil
 }
 
 func (p *initPlugin) PostScaffold() error {

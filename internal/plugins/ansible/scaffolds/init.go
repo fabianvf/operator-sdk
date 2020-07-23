@@ -47,11 +47,10 @@ type initScaffolder struct {
 }
 
 // NewInitScaffolder returns a new Scaffolder for project initialization operations
-func NewInitScaffolder(config *config.Config, apiScaffolder scaffold.Scaffolder, generatePlaybook bool) scaffold.Scaffolder {
+func NewInitScaffolder(config *config.Config, apiScaffolder scaffold.Scaffolder) scaffold.Scaffolder {
 	return &initScaffolder{
-		config:           config,
-		apiScaffolder:    apiScaffolder,
-		generatePlaybook: generatePlaybook,
+		config:        config,
+		apiScaffolder: apiScaffolder,
 	}
 }
 
@@ -75,7 +74,7 @@ func (s *initScaffolder) Scaffold() error {
 func (s *initScaffolder) scaffold() error {
 	return machinery.NewScaffold().Execute(
 		s.newUniverse(),
-		&templates.Dockerfile{GeneratePlaybook: s.generatePlaybook},
+		&templates.Dockerfile{},
 		&templates.RequirementsYml{},
 		&templates.Watches{},
 

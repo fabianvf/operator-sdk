@@ -52,9 +52,9 @@ RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
  && chmod -R ug+rwx ${HOME}/.ansible
 
 COPY watches.yaml ${HOME}/watches.yaml
+`
 
-COPY {{.RolesDir}}/ ${HOME}/{{.RolesDir}}/
-{{- if .GeneratePlaybook }}
-COPY playbook.yml ${HOME}/playbook.yml
-{{- end }}
+const RolesFragment = `COPY {{.RolesDir}}/ ${HOME}/{{.RolesDir}}/
+`
+const PlaybooksFragment = `COPY {{.PlaybooksDir}}/ ${HOME}/{{.RolesDir}}/
 `

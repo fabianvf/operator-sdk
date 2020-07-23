@@ -75,6 +75,8 @@ func (p *createAPIPlugin) BindFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&p.createOptions.GVK.Version, versionFlag, "", "resource version")
 	fs.StringVar(&p.createOptions.GVK.Kind, kindFlag, "", "resource kind")
 	fs.StringVar(&p.createOptions.CRDVersion, crdVersionFlag, crdVersionV1, "crd version to generate")
+	fs.BoolVarP(&p.createOptions.GeneratePlaybook, "generate-playbook", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
+	fs.BoolVarP(&p.createOptions.GenerateRole, "generate-role", "", false, "Generate a playbook skeleton. (Only used for TODO(asmacdo)--type ansible)")
 }
 
 func (p *createAPIPlugin) InjectConfig(c *config.Config) {
