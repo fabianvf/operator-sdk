@@ -120,7 +120,8 @@ func (s *apiScaffolder) scaffold() error {
 	}
 
 	if s.opts.GeneratePlaybook {
-		createAPITemplates = append(createAPITemplates, &playbooks.Playbook{})
+		createAPITemplates = append(createAPITemplates,
+			&playbooks.Playbook{GenerateRole: s.opts.GenerateRole})
 	}
 	return machinery.NewScaffold().Execute(
 		s.newUniverse(resource),

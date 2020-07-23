@@ -23,6 +23,8 @@ import (
 type Playbook struct {
 	file.TemplateMixin
 	file.ResourceMixin
+
+	GenerateRole bool
 }
 
 func (f *Playbook) SetTemplateDefaults() error {
@@ -44,7 +46,11 @@ const playbookTmpl = `---
     - community.kubernetes
     - operator_sdk.util
 
+  {{- if .GenerateRole }}
   tasks:
     - import_role:
         name: "{{.Resource.Kind | lower }}"
+  {{- else }}
+  tasks: []
+	{{- end }}
 `
