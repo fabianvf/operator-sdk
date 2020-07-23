@@ -54,7 +54,6 @@ type WatchesUpdater struct {
 
 	GeneratePlaybook bool
 	RolesDir         string
-	// ChartPath string
 }
 
 func (*WatchesUpdater) GetPath() string {

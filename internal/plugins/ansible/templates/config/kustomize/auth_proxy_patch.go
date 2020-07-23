@@ -1,5 +1,4 @@
 /*
-TODO(asmacdo) Modified
 Copyright 2018 The Kubernetes Authors.
 Modifications copyright 2020 The Operator-SDK Authors
 

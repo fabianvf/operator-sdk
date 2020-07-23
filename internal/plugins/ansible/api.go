@@ -1,6 +1,6 @@
 /*
-TODO(asmacdo) sdk licence header
 Copyright 2020 The Kubernetes Authors.
+Modifications copyright 2020 The Operator-SDK Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,13 +37,10 @@ import (
 )
 
 const (
-	groupFlag            = "group"
-	versionFlag          = "version"
-	kindFlag             = "kind"
-	helmChartFlag        = "helm-chart"
-	helmChartRepoFlag    = "helm-chart-repo"
-	helmChartVersionFlag = "helm-chart-version"
-	crdVersionFlag       = "crd-version"
+	groupFlag      = "group"
+	versionFlag    = "version"
+	kindFlag       = "kind"
+	crdVersionFlag = "crd-version"
 
 	crdVersionV1      = "v1"
 	crdVersionV1beta1 = "v1beta1"
