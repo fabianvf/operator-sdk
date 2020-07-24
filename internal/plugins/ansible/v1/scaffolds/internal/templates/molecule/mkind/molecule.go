@@ -69,6 +69,7 @@ provisioner:
         operator_image: testing-operator
         pull_policy: "Never"
         kubeconfig: "{{ "{{ lookup('env', 'KUBECONFIG') }}" }}"
+        kustomize: ${KUSTOMIZE_PATH:-kustomize}
   env:
     K8S_AUTH_KUBECONFIG: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
     KUBECONFIG: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
