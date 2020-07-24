@@ -18,14 +18,16 @@ setup_envs $tmp_sdk_root
 
 deploy_operator() {
     header_text "Running deploy operator"
-    kustomize build --load_restrictor none config/testing | kubectl apply -f -
-    kubectl create clusterrolebinding memcached-operator-system-metrics-reader --clusterrole=osdk-metrics-reader --serviceaccount=default:default
+    IMG=$DEST_IMAGE make deploy
+    kubectl create clusterrolebinding memcached-operator-system-metrics-reader --clusterrole=memcached-operator-metrics-reader --serviceaccount=default:default
 }
 
 remove_operator() {
+    pushd $TMPDIR/memcached-operator
     header_text "Running remove operator"
     kubectl delete --ignore-not-found clusterrolebinding memcached-operator-system-metrics-reader
-    kustomize build --load_restrictor none config/testing | kubectl delete --wait=true --ignore-not-found=true -f -
+    make undeploy
+    popd
 }
 
 operator_logs() {
@@ -34,17 +36,13 @@ operator_logs() {
     header_text "Getting events"
     kubectl get events
     header_text "Getting operator logs"
-    kubectl logs deployment/osdk-controller-manager -c manager
+    kubectl logs deployment/memcached-operator-controller-manager -c manager
 }
 
 test_operator() {
     header_text "Testing operator metrics"
-    # kind has an issue with certain image registries (ex. redhat's), so use a
-    # different test pod image.
-    local metrics_test_image="fedora:latest"
-
     header_text "wait for operator pod to run"
-    if ! timeout 1m kubectl rollout status deployment/osdk-controller-manager;
+    if ! timeout 1m kubectl rollout status deployment/memcached-operator-controller-manager;
     then
         error_text "FAIL: Failed to run"
         operator_logs
@@ -52,7 +50,7 @@ test_operator() {
     fi
 
    header_text "verify that metrics service was created"
-   if ! timeout 60s bash -c -- "until kubectl get service/osdk-controller-manager-metrics-service > /dev/null 2>&1; do sleep 1; done";
+   if ! timeout 60s bash -c -- "until kubectl get service/memcached-operator-controller-manager-metrics-service > /dev/null 2>&1; do sleep 1; done";
    then
        error_text "FAIL: Failed to get metrics service"
        operator_logs
@@ -64,7 +62,7 @@ test_operator() {
    token=$(kubectl get secret ${serviceaccount_secret} -n default -o jsonpath={.data.token} | base64 -d)
 
    # verify that the metrics endpoint exists
-   if ! timeout 60s bash -c -- "until kubectl run --attach --rm --restart=Never --namespace=default test-metrics --image=${metrics_test_image} -- curl -sfkH \"Authorization: Bearer ${token}\" https://osdk-controller-manager-metrics-service:8443/metrics; do sleep 1; done";
+   if ! timeout 60s bash -c -- "until kubectl run --attach --rm --restart=Never --namespace=default test-metrics --image=${METRICS_TEST_IMAGE} -- -sfkH \"Authorization: Bearer ${token}\" https://memcached-operator-controller-manager-metrics-service:8443/metrics; do sleep 1; done";
    then
        error_text "Failed to verify that metrics endpoint exists"
        operator_logs
@@ -108,7 +106,7 @@ test_operator() {
     fi
 
     header_text "Verify that config map requests skip the cache."
-    if ! kubectl logs deployment/osdk-controller-manager -c manager | grep -e "Skipping cache lookup\".*"Path\":\"\/api\/v1\/namespaces\/default\/configmaps\/test-blacklist-watches\";
+    if ! kubectl logs deployment/memcached-operator-controller-manager -c manager | grep -e "Skipping cache lookup\".*"Path\":\"\/api\/v1\/namespaces\/default\/configmaps\/test-blacklist-watches\";
     then
         error_text "FAIL: test-blacklist-watches should not be accessible with the cache."
         operator_logs
@@ -117,7 +115,7 @@ test_operator() {
 
 
     header_text "verify that metrics reflect cr creation"
-    if ! timeout 60s bash -c -- "until kubectl run --attach --rm --restart=Never --namespace=default test-metrics --image=${metrics_test_image} -- curl -sfkH \"Authorization: Bearer ${token}\" https://osdk-controller-manager-metrics-service:8443/metrics | grep memcached-sample; do sleep 1; done";
+    if ! timeout 60s bash -c -- "until kubectl run --attach --rm --restart=Never --namespace=default test-metrics --image=${METRICS_TEST_IMAGE} -- -sfkH \"Authorization: Bearer ${token}\" https://memcached-operator-controller-manager-metrics-service:8443/metrics | grep memcached-sample; do sleep 1; done";
     then
         error_text "Failed to verify that metrics reflect cr creation"
         operator_logs
@@ -156,7 +154,7 @@ test_operator() {
     fi
 
     header_text "Ensure that no errors appear in the log"
-    if kubectl logs deployment/osdk-controller-manager -c manager| grep -i error;
+    if kubectl logs deployment/memcached-operator-controller-manager -c manager| grep -i error;
     then
         error_text "FAIL: the operator log includes errors"
         operator_logs
@@ -190,15 +188,19 @@ sed -i".bak" -E -e 's/(FROM quay.io\/operator-framework\/ansible-operator)(:.*)?
 IMG=$DEST_IMAGE make docker-build
 # If using a kind cluster, load the image into all nodes.
 load_image_if_kind "$DEST_IMAGE"
-pushd config/testing
-kustomize edit set image testing=$DEST_IMAGE
-kustomize edit add patch pull_policy/Never.yaml
-kustomize edit set namespace default
+make kustomize
+if [ -f ./bin/kustomize ] ; then
+  KUSTOMIZE="$(realpath ./bin/kustomize)"
+else
+  KUSTOMIZE="$(which kustomize)"
+fi
+pushd config/default
+${KUSTOMIZE} edit set namespace default
 popd
 
 # kind has an issue with certain image registries (ex. redhat's), so use a
 # different test pod image.
-METRICS_TEST_IMAGE="fedora:latest"
+METRICS_TEST_IMAGE="curlimages/curl:latest"
 docker pull "$METRICS_TEST_IMAGE"
 # If using a kind cluster, load the metrics test image into all nodes.
 load_image_if_kind "$METRICS_TEST_IMAGE"
@@ -208,7 +210,6 @@ OPERATORDIR="$(pwd)"
 trap_add 'remove_operator' EXIT
 deploy_operator
 test_operator
-remove_operator
 
 popd
 popd
