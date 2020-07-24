@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package pull_policy
+package pullpolicy
 
 import (
 	"path/filepath"
@@ -23,28 +23,28 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/model/file"
 )
 
-var _ file.Template = &IfNotPresentPullPatch{}
+var _ file.Template = &AlwaysPullPatch{}
 
-// IfNotPresentPullPatch scaffolds the patch file for overriding the
+// AlwaysPullPatch scaffolds the patch file for overriding the
 // default image pull policy during Ansible testing
-type IfNotPresentPullPatch struct {
+type AlwaysPullPatch struct {
 	file.TemplateMixin
 }
 
 // SetTemplateDefaults implements input.Template
-func (f *IfNotPresentPullPatch) SetTemplateDefaults() error {
+func (f *AlwaysPullPatch) SetTemplateDefaults() error {
 	if f.Path == "" {
-		f.Path = filepath.Join("config", "testing", "pull_policy", "IfNotPresent.yaml")
+		f.Path = filepath.Join("config", "testing", "pull_policy", "Always.yaml")
 	}
 
-	f.TemplateBody = ifNotPresentPullPatchTemplate
+	f.TemplateBody = alwaysPullPatchTemplate
 
 	f.IfExistsAction = file.Error
 
 	return nil
 }
 
-const ifNotPresentPullPatchTemplate = `---
+const alwaysPullPatchTemplate = `---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,5 +55,5 @@ spec:
     spec:
       containers:
         - name: manager
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 `

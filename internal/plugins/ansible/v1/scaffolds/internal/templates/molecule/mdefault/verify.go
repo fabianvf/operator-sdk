@@ -74,7 +74,7 @@ const verifyTemplate = `---
           loop: "{{ "{{ q('k8s', api_version='v1', kind='Pod', namespace=namespace) }}" }}"
           register: debug_logs
 
-        - name: Ouput gathered resources
+        - name: Output gathered resources
           debug:
             var: debug_resources
 

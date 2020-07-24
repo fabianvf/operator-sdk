@@ -28,7 +28,7 @@ import (
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/prometheus"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/rbac"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/testing"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/testing/pull_policy"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/testing/pullpolicy"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/molecule/mdefault"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/molecule/mkind"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/playbooks"
@@ -47,9 +47,8 @@ const (
 var _ scaffold.Scaffolder = &initScaffolder{}
 
 type initScaffolder struct {
-	config           *config.Config
-	apiScaffolder    scaffold.Scaffolder
-	generatePlaybook bool
+	config        *config.Config
+	apiScaffolder scaffold.Scaffolder
 }
 
 // NewInitScaffolder returns a new Scaffolder for project initialization operations
@@ -118,9 +117,9 @@ func (s *initScaffolder) scaffold() error {
 		&mkind.Create{},
 		&mkind.Destroy{},
 		&mkind.Molecule{},
-		&pull_policy.AlwaysPullPatch{},
-		&pull_policy.IfNotPresentPullPatch{},
-		&pull_policy.NeverPullPatch{},
+		&pullpolicy.AlwaysPullPatch{},
+		&pullpolicy.IfNotPresentPullPatch{},
+		&pullpolicy.NeverPullPatch{},
 		&testing.DebugLogsPatch{},
 		&testing.Kustomization{},
 		&testing.ManagerImage{},
