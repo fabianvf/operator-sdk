@@ -44,9 +44,18 @@ func (f *DebugLogsPatch) SetTemplateDefaults() error {
 	return nil
 }
 
-const debugLogsPatchTemplate = `- op: add
-  path: /spec/template/spec/containers/0/env/-
-  value:
-    name: ANSIBLE_DEBUG_LOGS
-    value: "TRUE"
+const debugLogsPatchTemplate = `---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+        - name: manager
+          env:
+            - name: ANSIBLE_DEBUG_LOGS
+              value: "TRUE"
 `
