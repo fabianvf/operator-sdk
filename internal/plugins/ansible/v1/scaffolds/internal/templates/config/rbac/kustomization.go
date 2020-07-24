@@ -24,19 +24,19 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/model/file"
 )
 
-var _ file.Template = &KustomizeRBAC{}
+var _ file.Template = &Kustomization{}
 
 var rbacKustomizePath = filepath.Join("config", "rbac", "kustomization.yaml")
 
 const patch6902Marker = "patch6902"
 
-// KustomizeRBAC scaffolds the Kustomization file in rbac folder.
-type KustomizeRBAC struct {
+// Kustomization scaffolds the Kustomization file in rbac folder.
+type Kustomization struct {
 	file.TemplateMixin
 }
 
 // SetTemplateDefaults implements input.Template
-func (f *KustomizeRBAC) SetTemplateDefaults() error {
+func (f *Kustomization) SetTemplateDefaults() error {
 	if f.Path == "" {
 		f.Path = rbacKustomizePath
 	}

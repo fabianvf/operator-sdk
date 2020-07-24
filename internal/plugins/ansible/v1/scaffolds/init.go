@@ -22,17 +22,17 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/model/config"
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/kdefault"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/manager"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/prometheus"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/rbac"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/testing"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/testing/pull_policy"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/molecule/mdefault"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/molecule/mkind"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/playbooks"
-	ansibleroles "github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/roles"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/kdefault"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/manager"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/prometheus"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/rbac"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/testing"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/config/testing/pull_policy"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/molecule/mdefault"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/molecule/mkind"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/playbooks"
+	ansibleroles "github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/scaffolds/internal/templates/roles"
 
 	"github.com/operator-framework/operator-sdk/internal/kubebuilder/machinery"
 )
@@ -84,7 +84,7 @@ func (s *initScaffolder) scaffold() error {
 		&templates.RequirementsYml{},
 		&templates.Watches{},
 
-		&rbac.KustomizeRBAC{},
+		&rbac.Kustomization{},
 		&rbac.ClientClusterRole{},
 		&rbac.AuthProxyRole{},
 		&rbac.AuthProxyRoleBinding{},
