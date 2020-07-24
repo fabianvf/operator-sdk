@@ -6,8 +6,6 @@ source hack/lib/test_lib.sh
 source hack/lib/image_lib.sh
 source ./hack/lib/common.sh
 
-set -x
-
 # ansible proxy test require a running cluster; run during e2e instead
 go test -count=1 ./pkg/ansible/proxy/...
 
@@ -187,7 +185,6 @@ echo $marker >> watches.yaml
 header_text "Adding a second Kind to test watching multiple GVKs"
 operator-sdk create api --kind=Foo --group ansible --version=v1alpha1
 sed -i".bak" -e 's/# FIXME.*/role: \/dev\/null/g' watches.yaml;rm -f watches.yaml.bak
-cat watches.yaml
 
 sed -i".bak" -E -e 's/(FROM quay.io\/operator-framework\/ansible-operator)(:.*)?/\1:dev/g' Dockerfile; rm -f Dockerfile.bak
 IMG=$DEST_IMAGE make docker-build
