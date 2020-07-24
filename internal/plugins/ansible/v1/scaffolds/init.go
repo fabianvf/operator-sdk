@@ -23,7 +23,7 @@ import (
 	"sigs.k8s.io/kubebuilder/pkg/plugin/scaffold"
 
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates"
-	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/kustomize"
+	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/kdefault"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/manager"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/prometheus"
 	"github.com/operator-framework/operator-sdk/internal/plugins/ansible/v1/templates/config/rbac"
@@ -100,8 +100,8 @@ func (s *initScaffolder) scaffold() error {
 		&manager.Manager{Image: imageName},
 		&manager.Kustomization{},
 
-		&kustomize.Kustomize{},
-		&kustomize.AuthProxyPatch{},
+		&kdefault.Kustomize{},
+		&kdefault.AuthProxyPatch{},
 
 		&templates.Makefile{},
 		&ansibleroles.Placeholder{},
